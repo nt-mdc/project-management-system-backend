@@ -15,12 +15,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('project_id')->constrained('projects');
-            $table->string('name');
+            $table->string('title');
             $table->string('description');
             $table->date('start_at');
             $table->date('end_at');
             $table->enum('priority', ['low', 'medium', 'high']);
-            $table->enum('status', ['to-do', 'in-progress', 'done']);
+            $table->enum('status', ['available-soon','in-progress', 'done']);
+            $table->string('assigned_email');
+
+            $table->foreign('assigned_email')
+            ->references('email')
+            ->on('users')
+            ->onDelete('cascade');
         });
     }
 
