@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('project_id')->constrained('projects');
             $table->longText('content');
-            $table->timestamp('created_at');
+            $table->timestamps();
         });
     }
 

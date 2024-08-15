@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskComment;
 use Illuminate\Http\Request;
@@ -12,12 +13,12 @@ class TaskCommentController extends Controller
 {
     use Rules, OwnerCheck;
 
-    public function index(Task $task)
+    public function index(Project $project, Task $task)
     {
         return $task->comments;
     }
 
-    public function store(Request $request, Task $task)
+    public function store(Request $request, Project $project, Task $task)
     {
         $userId = $request->user()->id;
 
@@ -35,13 +36,27 @@ class TaskCommentController extends Controller
         return $taskComment;
     }
 
-    public function show(TaskComment $taskComment)
+    public function show(TaskComment $comment)
     {
-        //
+        return $comment;
     }
 
-    public function destroy(TaskComment $taskComment)
+    public function destroy(Request $request, $comment)
     {
-        //
+        $userId = $request->user()->id;
+        $comment = TaskComment::find($comment);
+        
+        if(!$comment)
+        {
+            return response([
+                'message' => 'This comment does not exist'
+            ], 404);
+        }
+
+        $this->checkOwnerCommentUser($comment, $userId);
+
+        $comment->delete();
+
+        return response()->noContent();
     }
 }

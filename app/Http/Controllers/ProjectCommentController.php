@@ -46,8 +46,6 @@ class ProjectCommentController extends Controller
     {
         $userId = $request->user()->id;
         $comment = ProjectComment::find($comment);
-        
-        $this->checkOwnerCommentUser($comment, $userId);
 
         if(!$comment)
         {
@@ -55,6 +53,8 @@ class ProjectCommentController extends Controller
                 'message' => 'This comment does not exist'
             ], 404);
         }
+
+        $this->checkOwnerCommentUser($comment, $userId);
 
         $comment->delete();
 

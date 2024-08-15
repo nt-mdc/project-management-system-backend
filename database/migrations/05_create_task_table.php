@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high']);
             $table->enum('status', ['available-soon','in-progress', 'done']);
             $table->string('assigned_email');
+            $table->timestamps();
 
             $table->foreign('assigned_email')
             ->references('email')
@@ -35,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task');
+        Schema::dropIfExists('tasks');
     }
 };
