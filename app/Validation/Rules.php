@@ -81,11 +81,12 @@ trait Rules
 
     protected function password(): array 
     {
-        return ['required', Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised()];
+        return ['required', Password::min(8)->letters()->mixedCase()->numbers()->symbols()];
     }
 
     protected function content(): array
     {
         return ['required', 'min:5', 'max:1500'];
     }
+
 }

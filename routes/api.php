@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectCommentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
@@ -12,10 +13,14 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::group(['controller' => AuthController::class],function () {
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-    Route::delete('logout', 'logout')->middleware('auth:sanctum');
+Route::group(['prefix' => 'auth'],function () {
+    Route::group(['controller' => AuthController::class], function () {
+        Route::post('register', 'register');
+        Route::post('login', 'login');
+        Route::delete('logout', 'logout')->middleware('auth:sanctum');
+    });
+
+    Route::post('password/email', [ResetPasswordController::class, 'forgetPassword']);
 });
 
 

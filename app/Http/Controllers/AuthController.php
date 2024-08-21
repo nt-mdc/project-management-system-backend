@@ -22,11 +22,9 @@ class AuthController extends Controller
 
         $user = User::create($data);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return [
+            'message' => 'User registered successfully',
             'user' => $user,
-            'token' => $token
         ];
     }
 
@@ -34,23 +32,27 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'email' => $this->emailExists(true),
-            'password' => $this->password()
+            'password' => $this->password(),
         ]);
 
         $user = User::where('email', $data['email'])->first();
 
-        if(!Auth::attempt($data)){
-            return response([
-                'message' => 'Bad creds'
-            ], 401);
+        if(Auth::attempt($data)){
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return [
+                'message' => 'Login successful',
+                'token' => [
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ],
+                'user' => $user,
+            ];
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return [
-            'user' => $user,
-            'token' => $token
-        ];
+        return response([
+            'message' => 'Invalid credentials'
+        ], 401);
     }
 
     public function logout (Request $request)
