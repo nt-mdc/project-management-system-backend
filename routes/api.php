@@ -26,9 +26,10 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function(){
 
     Route::group(['prefix' => 'user', 'controller' => UserController::class], function () {
         Route::get('profile', 'profile');
-        Route::get('update', 'updateUser');
-        Route::post('profile-photo/store-or-update', 'updateOrStoreProfilePhoto');
+        Route::put('update', 'updateUser');
+        Route::match(['put', 'post'], 'profile-photo/store-or-update', 'updateOrStoreProfilePhoto');
         Route::get('profile-photo/get', 'getProfilePhoto');
+        Route::delete('profile-photo/delete', 'deleteProfilePhoto');
     });
     
 });

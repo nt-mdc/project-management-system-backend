@@ -81,6 +81,10 @@ class UserController extends Controller
     //This function generates a token and sends the password reset email
     public function forgetPassword (Request $request)
     {
+        $data = $request->validate([
+            'email' => $this->emailExists(true),
+        ]);
+
         try {
             $user = User::where('email', $request->email)->get();
 
@@ -112,7 +116,7 @@ class UserController extends Controller
                 return response()->json(['message' => 'Please check your mail to reset your password']);
 
             } else {
-                return response()->json(['message' => 'User not found']);
+                return response()->json(['message' => 'User not found'], 422);
             }
 
         } catch (\Exception $e) {
@@ -161,7 +165,7 @@ class UserController extends Controller
         $user = $request->user();
         return response()->json([
            "user" => $user,
-            "profile_photo_url" => URL::to('/').'/api/v1/profile-photo/get',
+            "profile_photo_url" => URL::to('/').'/api/v1/user/profile-photo/get',
         ]);
     }
 
@@ -221,7 +225,6 @@ class UserController extends Controller
         );
 
         return response()->json([
-            'success' => true,
             'profile_photo' => $profilePhoto
         ]);
     }
@@ -230,7 +233,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         $profilePhoto = ProfilePhoto::where('user_id', $user->id)->first();
-        unlink($profilePhoto->url);
+        unlink(public_path()."/images/".$profilePhoto->url);
         $profilePhoto->delete();
 
         return response()->noContent();
