@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['controller' => ResetPasswordController::class], function () {
+Route::group(['controller' => UserController::class], function () {
     Route::get('reset-password', 'resetPasswordLoad');
     Route::post('reset-password', 'resetPassword');
 });

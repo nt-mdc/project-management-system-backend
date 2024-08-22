@@ -40,4 +40,10 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->hasMany(Task::class, 'assigned_email', 'email');
     }
+
+    public function photo()
+    {
+        return $this->hasOne(ProfilePhoto::class);
+    }
+
 }

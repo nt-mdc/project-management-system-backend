@@ -9,7 +9,6 @@ class Task extends Model
 {
     use HasFactory;
     public $table = 'tasks';
-    public $timestamps = "false";
     protected $fillable = [
         'user_id',
         'project_id',

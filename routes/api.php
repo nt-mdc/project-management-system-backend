@@ -1,28 +1,20 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectCommentController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\TaskController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
 Route::group(['prefix' => 'auth'],function () {
-    Route::group(['controller' => AuthController::class], function () {
+    Route::group(['controller' => UserController::class], function () {
         Route::post('register', 'register');
         Route::post('login', 'login');
         Route::delete('logout', 'logout')->middleware('auth:sanctum');
+        Route::post('password/email', 'forgetPassword');
     });
-
-    Route::post('password/email', [ResetPasswordController::class, 'forgetPassword']);
 });
-
 
 Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function(){
     Route::apiResource('projects', ProjectController::class);
@@ -31,4 +23,12 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:sanctum'], function(){
     Route::apiResource('projects.tasks.comments', TaskCommentController::class)->except(['update']);
     
     Route::get('assigned-tasks', [TaskController::class, 'assignedTasks']);
+
+    Route::group(['prefix' => 'user', 'controller' => UserController::class], function () {
+        Route::get('profile', 'profile');
+        Route::get('update', 'updateUser');
+        Route::post('profile-photo/store-or-update', 'updateOrStoreProfilePhoto');
+        Route::get('profile-photo/get', 'getProfilePhoto');
+    });
+    
 });
