@@ -12,6 +12,8 @@ use Tests\TestCase;
 
 class ProjectControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected $token, $userId;
 
     protected function setUp(): void
