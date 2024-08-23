@@ -34,20 +34,31 @@ class ProjectController extends Controller
         return ['project' => $project];
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
+    public function show($project)
     {
-        return $project;
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        return $project->load('comments', 'tasks');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Project $project)
+    public function update(Request $request,$project)
     {
         $userId = $request->user()->id;
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
 
         $this->checkOwnerProjectUser($project, $userId);
 
@@ -66,9 +77,6 @@ class ProjectController extends Controller
         
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Request $request,$project)
     {
         $userId = $request->user()->id;

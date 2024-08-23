@@ -17,7 +17,11 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'title' => $this->faker->sentence,
+            'description' => $this->faker->paragraph,
+            'start_at' => $this->faker->dateTimeBetween('now', '+1 month'),
+            'end_at' => $this->faker->dateTimeBetween('+1 month', '+2 months'),
+            'status' => $this->faker->randomElement(['available-soon','in-progress', 'done']),
         ];
     }
 }
