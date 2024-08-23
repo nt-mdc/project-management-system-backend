@@ -13,5 +13,11 @@ class ProjectComment extends Model
         'user_id',
         'project_id',
         'content'
-    ]; 
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
