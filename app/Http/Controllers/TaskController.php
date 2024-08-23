@@ -13,9 +13,18 @@ class TaskController extends Controller
 
     use Rules, OwnerCheck;
 
-    public function index(Project $projects)
+    public function index($project)
     {
-        return $projects->tasks;    
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        return $project->tasks->load('comments');    
     }
 
 
@@ -25,9 +34,18 @@ class TaskController extends Controller
     }
 
 
-    public function store(Request $request, Project $project)
+    public function store(Request $request, $project)
     {
         $userId = $request->user()->id;
+
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
 
         $this->checkOwnerProjectUser($project, $userId);
 
@@ -51,22 +69,49 @@ class TaskController extends Controller
         return $task;
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Project $project, Task $task)
+    public function show($project, $task)
     {
+        $task = task::find($task);
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
+
         $this->checkOwnerProjectTask($project, $task);
 
-        return $task;
+        return $task->load('comments');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Project $project, Task $task)
+    public function update(Request $request, $project, $task)
     {
         $userId = $request->user()->id;
+        $project = Project::find($project);
+        $task = task::find($task);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
 
         $this->checkOwnerProjectUser($project, $userId);
         $this->checkOwnerProjectTask($project, $task);
@@ -78,7 +123,7 @@ class TaskController extends Controller
             'end_at' => $this->endDate(),
             'status' => $this->status(),
             'priority' => $this->priority(),
-            'assigned_email' => $this->emailUnique(),
+            'assigned_email' => $this->emailExists(),
         ]);
 
         $task->fill($data);
@@ -88,13 +133,19 @@ class TaskController extends Controller
     
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, Project $project,$task)
+    public function destroy(Request $request, $project, $task)
     {
         $userId = $request->user()->id;
         $task = task::find($task);
+
+        $project = Project::find($project);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
 
         $this->checkOwnerProjectUser($project, $userId);
 
