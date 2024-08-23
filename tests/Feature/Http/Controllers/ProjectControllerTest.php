@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +12,7 @@ use Tests\TestCase;
 
 class ProjectControllerTest extends TestCase
 {
-    protected $token;
+    protected $token, $userId;
 
     protected function setUp(): void
     {
@@ -27,6 +28,7 @@ class ProjectControllerTest extends TestCase
         ]);
 
         $this->token = $response->json('token.access_token');
+        $this->userId = $response->json('user.id');
     }
 
     public function testIndexProject_withValidInformation_returnsSuccessResponse()
@@ -230,17 +232,10 @@ class ProjectControllerTest extends TestCase
 
     public function testGetOneProject_withValidInformation_returnsSuccessResponse()
     {
-        $data = [
-            'title' => Str::random(10),
-            'description' => Str::random(30),
-            'start_at' => "2040-10-30",
-            'end_at' =>  "2040-11-30",
-            'status' => "available-soon"
-        ];
 
-        $project = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
+        $project = Project::factory()->create(['user_id' => $this->userId]);
 
-        $response = $this->withToken($this->token)->json('GET', '/api/v1/projects/'.$project->json('project.id'));
+        $response = $this->withToken($this->token)->json('GET', '/api/v1/projects/'.$project->id);
 
         $response->assertStatus(200)
                 ->assertJsonStructure([
@@ -271,17 +266,10 @@ class ProjectControllerTest extends TestCase
 
    public function testUpdateProject_withValidInformation_returnsSuccessResponse()
    {
-    $data = [
-        'title' => Str::random(10),
-        'description' => Str::random(30),
-        'start_at' => "2040-10-30",
-        'end_at' =>  "2040-11-30",
-        'status' => "available-soon"
-    ];
 
-    $project = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
+    $project = Project::factory()->create(['user_id' => $this->userId]);
 
-    $response = $this->withToken($this->token)->json('PUT', '/api/v1/projects/'.$project->json('project.id'),[
+    $response = $this->withToken($this->token)->json('PUT', '/api/v1/projects/'.$project->id,[
         'title' => Str::random(12),
         'description' => Str::random(31),
         'status' => 'in-progress'
@@ -303,17 +291,10 @@ class ProjectControllerTest extends TestCase
 
    public function testUpdateProject_withInvalidInformation_returnsBadResponse()
    {
-    $data = [
-        'title' => Str::random(10),
-        'description' => Str::random(30),
-        'start_at' => "2040-10-30",
-        'end_at' =>  "2040-11-30",
-        'status' => "available-soon"
-    ];
 
-    $project = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
+    $project = Project::factory()->create(['user_id' => $this->userId]);
 
-    $response = $this->withToken($this->token)->json('PUT', '/api/v1/projects/'.$project->json('project.id'),[
+    $response = $this->withToken($this->token)->json('PUT', '/api/v1/projects/'.$project->id,[
         'title' => "as",
         'description' => "ad",
         'start_at' => "2000-10-30",
@@ -364,17 +345,9 @@ class ProjectControllerTest extends TestCase
 
    public function testDeleteProject_withValidInformation_returnsSuccessResponse()
     {
-        $data = [
-            'title' => Str::random(10),
-            'description' => Str::random(30),
-            'start_at' => "2040-10-30",
-            'end_at' =>  "2040-11-30",
-            'status' => "available-soon"
-        ];
+        $project = Project::factory()->create(['user_id' => $this->userId]);
 
-        $project = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
-
-        $response = $this->withToken($this->token)->json('DELETE', '/api/v1/projects/'.$project->json('project.id'));
+        $response = $this->withToken($this->token)->json('DELETE', '/api/v1/projects/'.$project->id);
 
         $response->assertStatus(204);
    }
