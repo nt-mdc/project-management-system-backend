@@ -13,14 +13,48 @@ class TaskCommentController extends Controller
 {
     use Rules, OwnerCheck;
 
-    public function index(Project $project, Task $task)
+    public function index($project, $task)
     {
-        return $task->comments;
+        $project = Project::find($project);
+        $task = task::find($task);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
+
+        return $task->comments->load('user');
     }
 
-    public function store(Request $request, Project $project, Task $task)
+    public function store(Request $request, $project, $task)
     {
         $userId = $request->user()->id;
+
+        $project = Project::find($project);
+        $task = task::find($task);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
 
         $data = $request->validate([
             'content' => $this->content(),
@@ -36,15 +70,56 @@ class TaskCommentController extends Controller
         return $taskComment;
     }
 
-    public function show(TaskComment $comment)
+    public function show($project, $task, $comment)
     {
-        return $comment;
+        $project = Project::find($project);
+        $task = task::find($task);
+        $comment = TaskComment::find($comment);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
+
+        if(!$comment)
+        {
+            return response([
+                'message' => 'This comment does not exist'
+            ], 404);
+        }
+
+        return $comment->load('user');
     }
 
-    public function destroy(Request $request, $comment)
+    public function destroy(Request $request, $project, $task, $comment)
     {
         $userId = $request->user()->id;
         $comment = TaskComment::find($comment);
+        $project = Project::find($project);
+        $task = task::find($task);
+
+        if(!$project)
+        {
+            return response([
+                'message' => 'This project does not exist'
+            ], 404);
+        }
+
+        if(!$task)
+        {
+            return response([
+                'message' => 'This task does not exist'
+            ], 404);
+        }
         
         if(!$comment)
         {
