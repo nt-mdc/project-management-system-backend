@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('project_id')->constrained('projects');
             $table->string('title');
-            $table->string('description');
+            $table->longText('description');
             $table->date('start_at');
             $table->date('end_at');
             $table->enum('priority', ['low', 'medium', 'high']);

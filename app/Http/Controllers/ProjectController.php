@@ -7,14 +7,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Validation\Rules;
 use App\Validation\OwnerCheck;
+use App\Validation\Exists;
 
 class ProjectController extends Controller
 {
-    use Rules, OwnerCheck;
+    use Rules, OwnerCheck, Exists;
 
     public function index(Request $request)
     {
-        return $request->user()->projects;        
+        return response()->json($request->user()->projects);       
     }
 
     public function store(Request $request)
@@ -31,35 +32,20 @@ class ProjectController extends Controller
 
         $project = Project::create(array_merge($data, ['user_id' => $user->id]));
 
-        return ['project' => $project];
+        return response()->json($project, 201);
     }
 
     public function show($project)
     {
-        $project = Project::find($project);
+        $project = $this->projectExist(Project::find($project));
 
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        return $project->load('comments', 'tasks');
+        return response()->json($project->load('comments', 'tasks'));
     }
 
     public function update(Request $request,$project)
     {
         $userId = $request->user()->id;
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
         $this->checkOwnerProjectUser($project, $userId);
 
         $data = $request->validate([
@@ -73,22 +59,14 @@ class ProjectController extends Controller
         $project->fill($data);
         $project->save();
 
-        return $project;
+        return response()->json($project);
         
     }
 
     public function destroy(Request $request,$project)
     {
         $userId = $request->user()->id;
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
         $this->checkOwnerProjectUser($project, $userId);
         
         $project->delete();

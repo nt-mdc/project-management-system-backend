@@ -7,38 +7,24 @@ use App\Models\ProjectComment;
 use Illuminate\Http\Request;
 use App\Validation\Rules;
 use App\Validation\OwnerCheck;
+use App\Validation\Exists;
 
 class ProjectCommentController extends Controller
 {
 
-    use Rules, OwnerCheck;
+    use Rules, OwnerCheck, Exists;
 
     public function index($project)
     {
-        $project = Project::find($project);
+        $project = $this->projectExist(Project::find($project));
 
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        return $project->comments->load('user');
+        return response()->json($project->comments->load('user'));
     }
 
     public function store(Request $request, $project)
     {
         $userId = $request->user()->id;
-
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
+        $project = $this->projectExist(Project::find($project));
 
         $data = $request->validate([
             'content' => $this->content(),
@@ -51,50 +37,22 @@ class ProjectCommentController extends Controller
 
         $projComment = ProjectComment::create(array_merge($data, $foreign));
 
-        return $projComment;
+        return response()->json($projComment, 201);
     }
 
     public function show($project, $comment)
     {
-        $project = Project::find($project);
+        $project = $this->projectExist(Project::find($project));
+        $comment = $this->commentExist(ProjectComment::find($comment));
 
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        $comment = ProjectComment::find($comment);
-
-        if(!$comment)
-        {
-            return response([
-                'message' => 'This comment does not exist'
-            ], 404);
-        }
-        return $comment;
+        return response()->json($comment);
     }
 
     public function destroy(Request $request, $project, $comment)
     {
         $userId = $request->user()->id;
-        $comment = ProjectComment::find($comment);
-        $project = Project::find($project);
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        if(!$comment)
-        {
-            return response([
-                'message' => 'This comment does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
+        $comment = $this->commentExist(ProjectComment::find($comment));
         $this->checkOwnerCommentUser($comment, $userId);
 
         $comment->delete();

@@ -37,7 +37,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User registered successfully',
             'user' => $user,
-        ]);
+        ], 201);
     }
 
     public function login (Request $request)
@@ -120,7 +120,7 @@ class UserController extends Controller
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()]);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
 
     }
@@ -164,7 +164,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         return response()->json([
-           "user" => $user,
+            "user" => $user,
             "profile_photo_url" => URL::to('/').'/api/v1/user/profile-photo/get',
         ]);
     }
@@ -181,9 +181,7 @@ class UserController extends Controller
         $user->fill($data);
         $user->save();
 
-        return response()->json([
-           "user" => $user,
-        ]);
+        return response()->json($user);
     }
 
     /*
@@ -224,9 +222,7 @@ class UserController extends Controller
             ]
         );
 
-        return response()->json([
-            'profile_photo' => $profilePhoto
-        ]);
+        return response()->json($profilePhoto, 201);
     }
 
     public function deleteProfilePhoto(Request $request)

@@ -35,15 +35,7 @@ class ProjectControllerTest extends TestCase
 
     public function testIndexProject_withValidInformation_returnsSuccessResponse()
     {
-        $data = [
-            'title' => Str::random(10),
-            'description' => Str::random(30),
-            'start_at' => "2040-10-30",
-            'end_at' =>  "2040-11-30",
-            'status' => "available-soon"
-        ];
-
-        $response = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
+        $project = Project::factory()->create(['user_id' => $this->userId]);
 
         $response = $this->withToken($this->token)->json('GET', '/api/v1/projects');
 
@@ -75,19 +67,17 @@ class ProjectControllerTest extends TestCase
 
         $response = $this->withToken($this->token)->json('POST', '/api/v1/projects', $data);
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
                 ->assertJsonStructure([
-                    'project' => [
-                        'title',
-                        'description',
-                        'start_at',
-                        'end_at',
-                        'status',
-                        'user_id',
-                        'updated_at',
-                        'created_at',
-                        'id'
-                    ],
+                    'title',
+                    'description',
+                    'start_at',
+                    'end_at',
+                    'status',
+                    'user_id',
+                    'updated_at',
+                    'created_at',
+                    'id'
                 ]);
    }
 

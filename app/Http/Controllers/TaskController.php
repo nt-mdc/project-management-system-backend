@@ -7,46 +7,31 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Validation\Rules;
 use App\Validation\OwnerCheck;
+use App\Validation\Exists;
 
 class TaskController extends Controller
 {
 
-    use Rules, OwnerCheck;
+    use Rules, OwnerCheck, Exists;
 
     public function index($project)
     {
-        $project = Project::find($project);
+        $project = $this->projectExist(Project::find($project));
 
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        return $project->tasks->load('comments');    
+        return response()->json($project->tasks->load('comments'));    
     }
 
 
     public function assignedTasks(Request $request)
     {
-        return $request->user()->assignedTasks;
+        return response()->json($request->user()->assignedTasks);
     }
 
 
     public function store(Request $request, $project)
     {
         $userId = $request->user()->id;
-
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
         $this->checkOwnerProjectUser($project, $userId);
 
         $data = $request->validate([
@@ -66,53 +51,23 @@ class TaskController extends Controller
 
         $task = Task::create(array_merge($data, $foreign));
 
-        return $task;
+        return response()->json($task, 201);
     }
 
     public function show($project, $task)
     {
-        $task = task::find($task);
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        if(!$task)
-        {
-            return response([
-                'message' => 'This task does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
+        $task = $this->taskExist(Task::find($task));
         $this->checkOwnerProjectTask($project, $task);
 
-        return $task->load('comments');
+        return response()->json($task->load('comments'));
     }
 
     public function update(Request $request, $project, $task)
     {
         $userId = $request->user()->id;
-        $project = Project::find($project);
-        $task = task::find($task);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
-        if(!$task)
-        {
-            return response([
-                'message' => 'This task does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
+        $task = $this->taskExist(Task::find($task));
         $this->checkOwnerProjectUser($project, $userId);
         $this->checkOwnerProjectTask($project, $task);
 
@@ -129,33 +84,16 @@ class TaskController extends Controller
         $task->fill($data);
         $task->save();
 
-        return $task;    
+        return response()->json($task);
     
     }
 
     public function destroy(Request $request, $project, $task)
     {
         $userId = $request->user()->id;
-        $task = task::find($task);
-
-        $project = Project::find($project);
-
-        if(!$project)
-        {
-            return response([
-                'message' => 'This project does not exist'
-            ], 404);
-        }
-
+        $project = $this->projectExist(Project::find($project));
+        $task = $this->taskExist(Task::find($task));
         $this->checkOwnerProjectUser($project, $userId);
-
-        if(!$task)
-        {
-            return response([
-                'message' => 'This task does not exist'
-            ], 404);
-        }
-
         $this->checkOwnerProjectTask($project, $task);
 
         $task->delete();
