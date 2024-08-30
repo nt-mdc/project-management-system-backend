@@ -1,0 +1,1778 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/127.0.0.1:8000"
+        }
+    ],
+    "info": {
+        "name": "Project Management API",
+        "_postman_id": "5d3eafad-78e6-4772-81cb-c905fd138a96",
+        "description": "The Project Management API allows you to create, update and delete projects and tasks, as well as add and manage comments. With authentication via Laravel Sanctum and properly documented endpoints, it provides a secure and well-organized solution for project management and collaboration.",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Account Management",
+            "description": "The Account Management encompasses endpoints dedicated to managing user profiles and profile pictures.\nIt includes operations for viewing and updating profile information as well as managing the associated profile picture.",
+            "item": [
+                {
+                    "name": "User Profile Retrieval.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/profile"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves detailed information from the authenticated user's profile, including personal data and profile picture."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n    \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n  },\n  \"profile_photo_url\": \"http:\/\/yourdomain.com\/api\/v1\/user\/profile-photo\/get\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update the user information",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/update",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/update"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john.newemail@example.com\",\"name\":\"John Smith\"}"
+                        },
+                        "description": "Updates the authenticated user's profile information, allowing modifications to personal data"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"John Smith\",\n  \"email\": \"john.newemail@example.com\",\n  \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n  \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n   \"message\": \"The name field is required. (and 1 more error)\",\n   \"errors\": {\n       \"name\": [\n           \"The name field is required.\"\n       ],\n       \"email\": [\n           \"The email has already been taken.\"\n       ]\n   }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Update or Store Profile Picture.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/profile-photo\/store-or-update",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/profile-photo\/store-or-update"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"base64\":\"data:image\\\/png;base64,iVBORw...\"}"
+                        },
+                        "description": "Updates the authenticated user's profile picture or stores a new image if none exists."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"id\": 1,\n  \"user_id\": 1,\n  \"url\": \"randomstring.png\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The base64 field is required.\",\n  \"errors\": {\n    \"base64\": [\"The base64 field is required.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Retrieve Profile Picture.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/profile-photo\/get",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/profile-photo\/get"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves the authenticated user's profile picture."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "file The user's profile photo.",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Profile Picture.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/user\/profile-photo\/delete",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/user\/profile-photo\/delete"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Deletes the authenticated user's profile picture."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Project Comments",
+            "description": "\nAPIs for managing comments on projects.",
+            "item": [
+                {
+                    "name": "Shows all comments for a project",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/comments",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "id",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  {\n    \"id\": 5,\n    \"user_id\": 78,\n    \"project_id\": 42,\n    \"content\": \"Comment content\",\n    \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"user\": {\n        \"id\": 78,\n        \"name\": \"User test\",\n        \"email\": \"testuser@email.com\",\n        \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n        \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a comment for a project",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/comments",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "dolorum",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"nihil\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n      \"content\": \"Comment content\",\n      \"project_id\": 42,\n      \"user_id\": 78,\n      \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n      \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n      \"id\": 5\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field is required.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field is required.\"\n      ]\n  }\n}",
+                            "name": "Missing content field"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field must be at least 5 characters.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field must be at least 5 characters.\"\n      ]\n  }\n}",
+                            "name": "Content field with fewer characters than the minimum"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field must not be greater than 1500 characters.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field must not be greater than 1500 characters.\"\n      ]\n  }\n}",
+                            "name": "Content field with more characters than the maximum"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show a specific comment in the project",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/comments\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/comments\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "possimus",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "non",
+                                    "description": "The ID of the comment."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "comment",
+                                    "key": "comment",
+                                    "value": "1",
+                                    "description": "The ID of the comment."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 5,\n  \"user_id\": 78,\n  \"project_id\": 42,\n  \"content\": \"Comment content\",\n  \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n  \"updated_at\": \"2024-08-24T14:34:56.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This comment does not exist\"\n}}",
+                            "name": "Comment not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a comment",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/comments\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/comments\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "veniam",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "voluptatem",
+                                    "description": "The ID of the comment."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "comment",
+                                    "key": "comment",
+                                    "value": "1",
+                                    "description": "The ID of the comment."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "",
+                            "name": "No content"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This comment does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This comment does not exist\"\n}",
+                            "name": "Comment not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Projects",
+            "description": "\nAPIs for managing projects.",
+            "item": [
+                {
+                    "name": "List Projects.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Lists projects that the user has created or projects to which they have a task assigned."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  {\n    \"id\": 1,\n    \"title\": \"Project Title\",\n    \"description\": \"Project Description\",\n    \"start_at\": \"2024-08-24T00:00:00.000000Z\",\n    \"end_at\": \"2024-08-25T00:00:00.000000Z\",\n    \"status\": \"available-soon\",\n    \"user_id\": 1,\n    \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n    \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Project.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"optio\",\"description\":\"Doloribus rerum consequatur sit quis qui possimus esse.\",\"start_at\":\"cumque\",\"end_at\":\"ad\",\"status\":\"'in-progress'\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"title\": \"Project Title\",\n  \"description\": \"Project Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"user_id\": 1,\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"id\": 1\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field is required. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field is required.\"],\n    \"description\": [\"The description field is required.\"],\n    \"start_at\": [\"The start_at field is required.\"],\n    \"end_at\": [\"The end_at field is required.\"],\n    \"status\": [\"The status field is required.\"]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field must be at least 10 characters. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field must be at least 10 characters.\"],\n    \"description\": [\"The description field must be at least 25 characters.\"],\n    \"start_at\": [\"The start at field must be a date after or equal to today.\"],\n    \"end_at\": [\"The end at field must be a date after start at.\"],\n    \"status\": [\"The selected status is invalid.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "View Project.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "itaque",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "View a project with its tasks and comments."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 1,\n  \"title\": \"Project Title\",\n  \"description\": \"Project Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"user_id\": 1,\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"comments\": [\n    {\n      \"id\": 1,\n      \"project_id\": 1,\n      \"user_id\": 1\n      \"content\": \"Comment content\",\n      \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n      \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n    }\n  ],\n  \"tasks\": [\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Project.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "autem",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"sequi\",\"description\":\"Voluptatibus repellat sequi eum neque rerum possimus odit.\",\"start_at\":\"facilis\",\"end_at\":\"labore\",\"status\":\"'available-soon'\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"title\": \"Project Title\",\n  \"description\": \"Project Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"user_id\": 1,\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"id\": 1\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This project does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field must be at least 10 characters. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field must be at least 10 characters.\"],\n    \"description\": [\"The description field must be at least 25 characters.\"],\n    \"start_at\": [\"The start at field must be a date after or equal to today.\"],\n    \"end_at\": [\"The end at field must be a date after start at.\"],\n    \"status\": [\"The selected status is invalid.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Project.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "voluptatibus",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "",
+                            "name": "No content"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This project does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Task Comments",
+            "description": "\nAPIs for managing comments on tasks within projects.",
+            "item": [
+                {
+                    "name": "Shows all comments for a task",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "numquam",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task_id",
+                                    "key": "task_id",
+                                    "value": "blanditiis",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "1",
+                                    "description": "The ID of the task."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"task_id\": 1,\n    \"content\": \"Comment content\",\n    \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"user\": {\n        \"id\": 78,\n        \"name\": \"User test\",\n        \"email\": \"testuser@email.com\",\n        \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n        \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This task does not exist\"\n}",
+                            "name": "Task not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a comment for a task",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "debitis",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task_id",
+                                    "key": "task_id",
+                                    "value": "sint",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "1",
+                                    "description": "The ID of the task."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"content\":\"nemo\"}"
+                        },
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n      \"content\": \"Comment content\",\n      \"task_id\": 42,\n      \"user_id\": 78,\n      \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n      \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n      \"id\": 5\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This task does not exist\"\n}",
+                            "name": "Task not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field is required.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field is required.\"\n      ]\n  }\n}",
+                            "name": "Missing content field"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field must be at least 5 characters.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field must be at least 5 characters.\"\n      ]\n  }\n}",
+                            "name": "Content field with fewer characters than the minimum"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The content field must not be greater than 1500 characters.\",\n  \"errors\": {\n      \"content\": [\n          \"The content field must not be greater than 1500 characters.\"\n      ]\n  }\n}",
+                            "name": "Content field with more characters than the maximum"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show a specific comment in the task",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "sapiente",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task_id",
+                                    "key": "task_id",
+                                    "value": "consequuntur",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "unde",
+                                    "description": "The ID of the comment."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "1",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "comment",
+                                    "key": "comment",
+                                    "value": "1",
+                                    "description": "The ID of the comment."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 5,\n  \"user_id\": 78,\n  \"task_id\": 42,\n  \"content\": \"Comment content\",\n  \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n  \"updated_at\": \"2024-08-24T14:34:56.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This task does not exist\"\n}",
+                            "name": "Task not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This comment does not exist\"\n}",
+                            "name": "Comment not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a comment",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:task_id\/comments\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "non",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task_id",
+                                    "key": "task_id",
+                                    "value": "quis",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "et",
+                                    "description": "The ID of the comment."
+                                },
+                                {
+                                    "id": "project",
+                                    "key": "project",
+                                    "value": "1",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "1",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "comment",
+                                    "key": "comment",
+                                    "value": "1",
+                                    "description": "The ID of the comment."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "",
+                            "name": "No content"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This comment does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This task does not exist\"\n}",
+                            "name": "Task not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This comment does not exist\"\n}",
+                            "name": "Comment not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Tasks",
+            "description": "\nThe Tasks group includes endpoints designed for task management.\nIt provides comprehensive functionality for handling tasks, covering all aspects from creation and viewing to updating and removal.\nThis group offers a thorough approach to managing and maintaining tasks associated with the user.",
+            "item": [
+                {
+                    "name": "List Tasks.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "repellat",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a list of all tasks associated with the project."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"comments\": [\n              {\n                \"id\": 6,\n                \"user_id\": 78,\n                \"task_id\": 14,\n                \"content\": \"comment content\",\n                \"created_at\": \"2024-08-24T15:58:57.000000Z\",\n                \"updated_at\": \"2024-08-24T15:58:57.000000Z\"\n              }\n          ]\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Task.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "magnam",
+                                    "description": "The ID of the project."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"consequatur\",\"description\":\"Ex consectetur quo odit explicabo.\",\"start_at\":\"aut\",\"end_at\":\"dolorem\",\"status\":\"'in-progress'\",\"priority\":\"'low'\",\"assigned_email\":\"heaney.raphael@example.net\"}"
+                        },
+                        "description": "Creates a new task based on the provided information, adding it to the user's task set."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"title\": \"Task Title\",\n  \"description\": \"Task Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"priority\": \"low\",\n  \"assigned_email\": \" testuser@email.com\",\n  \"project_id\": 1,\n  \"user_id\": 1,\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"id\": 1\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This project does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field is required. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field is required.\"],\n    \"description\": [\"The description field is required.\"],\n    \"start_at\": [\"The start_at field is required.\"],\n    \"end_at\": [\"The end_at field is required.\"],\n    \"status\": [\"The status field is required.\"],\n    \"priority\": [\"The priority field is required.\"],\n    \"assigned_email\": [\"The assigned_email field is required.\"]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field must be at least 10 characters. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field must be at least 10 characters.\"],\n    \"description\": [\"The description field must be at least 25 characters.\"],\n    \"start_at\": [\"The start at field must be a date after or equal to today.\"],\n    \"end_at\": [\"The end at field must be a date after start at.\"],\n    \"status\": [\"The selected status is invalid.\"],\n    \"priority\": [\"The selected priority is invalid.\"],\n    \"assigned_email\": [\"The selected assigned_email is invalid.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "View Task.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "natus",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "assumenda",
+                                    "description": "The ID of the task."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves details of a specific task, allowing for a complete view of the selected task\u2019s information."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"id\": 1,\n   \"user_id\": 1,\n   \"project_id\": 1,\n   \"title\": \"Project Title\",\n   \"description\": \"Project Description\",\n   \"start_at\": \"2024-12-20\",\n   \"end_at\": \"2025-01-20\",\n   \"priority\": \"low\",\n   \"status\": \"available-soon\",\n   \"assigned_email\": \"testusedsar@email.com\",\n   \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n   \"updated_at\": \"2024-08-24T13:51:22.000000Z\",\n   \"comments\": [\n           {\n             \"id\": 6,\n             \"user_id\": 78,\n             \"task_id\": 14,\n             \"content\": \"comment content\",\n             \"created_at\": \"2024-08-24T15:58:57.000000Z\",\n             \"updated_at\": \"2024-08-24T15:58:57.000000Z\"\n           }\n       ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This Task does not exist\"\n}",
+                            "name": "Task not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Task.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "quis",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "quia",
+                                    "description": "The ID of the task."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"veritatis\",\"description\":\"Unde quaerat minus consectetur sequi.\",\"start_at\":\"perferendis\",\"end_at\":\"qui\",\"status\":\"'available-soon'\",\"priority\":\"'low'\",\"assigned_email\":\"rosamond.gerhold@example.com\"}"
+                        },
+                        "description": "Updates the information of an existing task based on the provided modifications."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"title\": \"Task Title\",\n  \"description\": \"Task Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"priority\": \"low\",\n  \"assigned_email\": \" testuser@email.com\",\n  \"project_id\": 1,\n  \"user_id\": 1,\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"id\": 1\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This project does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This Task does not exist\"\n}",
+                            "name": "Task not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The title field must be at least 10 characters. (and 4 more errors)\",\n  \"errors\": {\n    \"title\": [\"The title field must be at least 10 characters.\"],\n    \"description\": [\"The description field must be at least 25 characters.\"],\n    \"start_at\": [\"The start at field must be a date after or equal to today.\"],\n    \"end_at\": [\"The end at field must be a date after start at.\"],\n    \"status\": [\"The selected status is invalid.\"],\n    \"priority\": [\"The selected priority is invalid.\"],\n    \"assigned_email\": [\"The selected assigned_email is invalid.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Task.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/projects\/:project_id\/tasks\/:id",
+                            "variable": [
+                                {
+                                    "id": "project_id",
+                                    "key": "project_id",
+                                    "value": "enim",
+                                    "description": "The ID of the project."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "vero",
+                                    "description": "The ID of the task."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes a specific task from the user's task set, permanently deleting it."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "",
+                            "name": "No content"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This project does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"This task does not belong to you\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This project does not exist\"\n}",
+                            "name": "Project not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"This task does not exist\"\n}",
+                            "name": "Task not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Assigned Tasks.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/assigned-tasks",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/assigned-tasks"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a list of tasks assigned to the user, allowing them to view tasks under their responsibility."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\",\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User management",
+            "description": "\nThis API provides comprehensive authentication management capabilities, including user registration, login, and logout operations.\nIts endpoints allow for secure user authentication, issuance of access tokens, ensuring data protection and adherence to security best practices.",
+            "item": [
+                {
+                    "name": "Create a user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john.doe@example.com\",\"password\":\"@123User\"}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n      \"name\": \"John Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"updated_at\": \"2024-08-24T13:50:23.000000Z\",\n      \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n      \"id\": 78\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n   \"message\": \"The name field must be a string. (and 5 more errors)\",\n   \"errors\": {\n       \"name\": [\n           \"The name field must be a string.\"\n       ],\n       \"email\": [\n           \"The email has already been taken.\"\n       ],\n       \"password\": [\n           \"The password field must be at least 8 characters.\",\n           \"The password field must contain at least one uppercase and one lowercase letter.\",\n           \"The password field must contain at least one symbol.\",\n           \"The password field must contain at least one number.\"\n       ]\n   }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Login the user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john.doe@example.com\",\"password\":\"\\\"@123User\\\"\"}"
+                        },
+                        "description": "It is at this endpoint that you will obtain the Bearer token to access other routes that require authentication.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Login successful\",\n   \"token\": {\n       \"access_token\": \"token_value\",\n       \"token_type\": \"Bearer\"\n   },\n   \"user\": {\n       \"id\": 78,\n       \"name\": \"John Doe\",\n       \"email\": \"john.doe@example.com\",\n       \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n       \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n   }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n      \"message\": \"Invalid credentials\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n      \"message\": \"The selected email is invalid.\",\n   \"errors\": {\n       \"email\": [\n           \"The selected email is invalid.\"\n       ],\n       \"password\": [\n           \"The password field must be at least 8 characters.\",\n           \"The password field must contain at least one uppercase and one lowercase letter.\",\n           \"The password field must contain at least one symbol.\",\n           \"The password field must contain at least one number.\"\n       ]\n   }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Log out the user.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/logout"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "On this endpoint you log out the user and remove their Bearer token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "",
+                            "name": "No content"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Change a user's password.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/auth\/password\/email",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/auth\/password\/email"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john.doe@example.com\"}"
+                        },
+                        "description": "This endpoint generates and sends the email to reset the user's password.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Please check your mail to reset your password\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"message\": \"Error message\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"User not found\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

@@ -1,0 +1,2792 @@
+openapi: 3.0.3
+info:
+  title: 'Project Management API'
+  description: 'The Project Management API allows you to create, update and delete projects and tasks, as well as add and manage comments. With authentication via Laravel Sanctum and properly documented endpoints, it provides a secure and well-organized solution for project management and collaboration.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://127.0.0.1:8000'
+paths:
+  /api/v1/user/profile:
+    get:
+      summary: 'User Profile Retrieval.'
+      operationId: userProfileRetrieval
+      description: "Retrieves detailed information from the authenticated user's profile, including personal data and profile picture."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  user:
+                    id: 1
+                    name: 'John Doe'
+                    email: john.doe@example.com
+                    created_at: '2024-08-24T13:50:23.000000Z'
+                    updated_at: '2024-08-24T13:50:23.000000Z'
+                  profile_photo_url: 'http://yourdomain.com/api/v1/user/profile-photo/get'
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      created_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+                  profile_photo_url:
+                    type: string
+                    example: 'http://yourdomain.com/api/v1/user/profile-photo/get'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - 'Account Management'
+  /api/v1/user/update:
+    put:
+      summary: 'Update the user information'
+      operationId: updateTheUserInformation
+      description: "Updates the authenticated user's profile information, allowing modifications to personal data"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: 'John Smith'
+                  email: john.newemail@example.com
+                  created_at: '2024-08-24T13:50:23.000000Z'
+                  updated_at: '2024-08-24T13:50:23.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: 'John Smith'
+                  email:
+                    type: string
+                    example: john.newemail@example.com
+                  created_at:
+                    type: string
+                    example: '2024-08-24T13:50:23.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T13:50:23.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The name field is required. (and 1 more error)'
+                  errors:
+                    name:
+                      - 'The name field is required.'
+                    email:
+                      - 'The email has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The name field is required. (and 1 more error)'
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name field is required.'
+                        items:
+                          type: string
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - 'Account Management'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The new email of the user.'
+                  example: john.newemail@example.com
+                name:
+                  type: string
+                  description: 'The new name of the user.'
+                  example: 'John Smith'
+  /api/v1/user/profile-photo/store-or-update:
+    put:
+      summary: 'Update or Store Profile Picture.'
+      operationId: updateOrStoreProfilePicture
+      description: "Updates the authenticated user's profile picture or stores a new image if none exists."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  user_id: 1
+                  url: randomstring.png
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  url:
+                    type: string
+                    example: randomstring.png
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The base64 field is required.'
+                  errors:
+                    base64:
+                      - 'The base64 field is required.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The base64 field is required.'
+                  errors:
+                    type: object
+                    properties:
+                      base64:
+                        type: array
+                        example:
+                          - 'The base64 field is required.'
+                        items:
+                          type: string
+      tags:
+        - 'Account Management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                base64:
+                  type: string
+                  description: 'The base64-encoded image string.'
+                  example: 'data:image/png;base64,iVBORw...'
+              required:
+                - base64
+  /api/v1/user/profile-photo/get:
+    get:
+      summary: 'Retrieve Profile Picture.'
+      operationId: retrieveProfilePicture
+      description: "Retrieves the authenticated user's profile picture."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "file The user's profile photo."
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - 'Account Management'
+  /api/v1/user/profile-photo/delete:
+    delete:
+      summary: 'Delete Profile Picture.'
+      operationId: deleteProfilePicture
+      description: "Deletes the authenticated user's profile picture."
+      parameters: []
+      responses:
+        204:
+          description: ''
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - 'Account Management'
+  '/api/v1/projects/{project_id}/comments':
+    get:
+      summary: 'Shows all comments for a project'
+      operationId: showsAllCommentsForAProject
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  {\n    \"id\": 5,\n    \"user_id\": 78,\n    \"project_id\": 42,\n    \"content\": \"Comment content\",\n    \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"user\": {\n        \"id\": 78,\n        \"name\": \"User test\",\n        \"email\": \"testuser@email.com\",\n        \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n        \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n    }\n  }\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - 'Project Comments'
+    post:
+      summary: 'Create a comment for a project'
+      operationId: createACommentForAProject
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  content: 'Comment content'
+                  project_id: 42
+                  user_id: 78
+                  updated_at: '2024-08-24T14:34:56.000000Z'
+                  created_at: '2024-08-24T14:34:56.000000Z'
+                  id: 5
+                properties:
+                  content:
+                    type: string
+                    example: 'Comment content'
+                  project_id:
+                    type: integer
+                    example: 42
+                  user_id:
+                    type: integer
+                    example: 78
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  id:
+                    type: integer
+                    example: 5
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Missing content field'
+                    type: object
+                    example:
+                      message: 'The content field is required.'
+                      errors:
+                        content:
+                          - 'The content field is required.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field is required.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field is required.'
+                            items:
+                              type: string
+                  -
+                    description: 'Content field with fewer characters than the minimum'
+                    type: object
+                    example:
+                      message: 'The content field must be at least 5 characters.'
+                      errors:
+                        content:
+                          - 'The content field must be at least 5 characters.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field must be at least 5 characters.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field must be at least 5 characters.'
+                            items:
+                              type: string
+                  -
+                    description: 'Content field with more characters than the maximum'
+                    type: object
+                    example:
+                      message: 'The content field must not be greater than 1500 characters.'
+                      errors:
+                        content:
+                          - 'The content field must not be greater than 1500 characters.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field must not be greater than 1500 characters.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field must not be greater than 1500 characters.'
+                            items:
+                              type: string
+      tags:
+        - 'Project Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'The content of the comment, must be a minimum of 5 characters and a maximum of 1,500 characters.'
+                  example: nihil
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: id
+        required: true
+        schema:
+          type: string
+  '/api/v1/projects/{project_id}/comments/{id}':
+    get:
+      summary: 'Show a specific comment in the project'
+      operationId: showASpecificCommentInTheProject
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 5
+                  user_id: 78
+                  project_id: 42
+                  content: 'Comment content'
+                  created_at: '2024-08-24T14:34:56.000000Z'
+                  updated_at: '2024-08-24T14:34:56.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 5
+                  user_id:
+                    type: integer
+                    example: 78
+                  project_id:
+                    type: integer
+                    example: 42
+                  content:
+                    type: string
+                    example: 'Comment content'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - 'Project Comments'
+    delete:
+      summary: 'Delete a comment'
+      operationId: deleteAComment
+      description: ''
+      parameters: []
+      responses:
+        204:
+          description: 'No content'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This comment does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This comment does not belong to you'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Comment not found'
+                    type: object
+                    example:
+                      message: 'This comment does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This comment does not exist'
+      tags:
+        - 'Project Comments'
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: possimus
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the comment.'
+        example: non
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: project
+        description: 'The ID of the project.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: comment
+        description: 'The ID of the comment.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/v1/projects:
+    get:
+      summary: 'List Projects.'
+      operationId: listProjects
+      description: 'Lists projects that the user has created or projects to which they have a task assigned.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  {\n    \"id\": 1,\n    \"title\": \"Project Title\",\n    \"description\": \"Project Description\",\n    \"start_at\": \"2024-08-24T00:00:00.000000Z\",\n    \"end_at\": \"2024-08-25T00:00:00.000000Z\",\n    \"status\": \"available-soon\",\n    \"user_id\": 1,\n    \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n    \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  }\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Projects
+    post:
+      summary: 'Create Project.'
+      operationId: createProject
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: 'Project Title'
+                  description: 'Project Description'
+                  start_at: '2024-12-31'
+                  end_at: '2025-01-10'
+                  status: available-soon
+                  user_id: 1
+                  updated_at: '2024-08-24T00:00:00.000000Z'
+                  created_at: '2024-08-24T00:00:00.000000Z'
+                  id: 1
+                properties:
+                  title:
+                    type: string
+                    example: 'Project Title'
+                  description:
+                    type: string
+                    example: 'Project Description'
+                  start_at:
+                    type: string
+                    example: '2024-12-31'
+                  end_at:
+                    type: string
+                    example: '2025-01-10'
+                  status:
+                    type: string
+                    example: available-soon
+                  user_id:
+                    type: integer
+                    example: 1
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  id:
+                    type: integer
+                    example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The title field is required. (and 4 more errors)'
+                      errors:
+                        title:
+                          - 'The title field is required.'
+                        description:
+                          - 'The description field is required.'
+                        start_at:
+                          - 'The start_at field is required.'
+                        end_at:
+                          - 'The end_at field is required.'
+                        status:
+                          - 'The status field is required.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The title field is required. (and 4 more errors)'
+                      errors:
+                        type: object
+                        properties:
+                          title:
+                            type: array
+                            example:
+                              - 'The title field is required.'
+                            items:
+                              type: string
+                          description:
+                            type: array
+                            example:
+                              - 'The description field is required.'
+                            items:
+                              type: string
+                          start_at:
+                            type: array
+                            example:
+                              - 'The start_at field is required.'
+                            items:
+                              type: string
+                          end_at:
+                            type: array
+                            example:
+                              - 'The end_at field is required.'
+                            items:
+                              type: string
+                          status:
+                            type: array
+                            example:
+                              - 'The status field is required.'
+                            items:
+                              type: string
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The title field must be at least 10 characters. (and 4 more errors)'
+                      errors:
+                        title:
+                          - 'The title field must be at least 10 characters.'
+                        description:
+                          - 'The description field must be at least 25 characters.'
+                        start_at:
+                          - 'The start at field must be a date after or equal to today.'
+                        end_at:
+                          - 'The end at field must be a date after start at.'
+                        status:
+                          - 'The selected status is invalid.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The title field must be at least 10 characters. (and 4 more errors)'
+                      errors:
+                        type: object
+                        properties:
+                          title:
+                            type: array
+                            example:
+                              - 'The title field must be at least 10 characters.'
+                            items:
+                              type: string
+                          description:
+                            type: array
+                            example:
+                              - 'The description field must be at least 25 characters.'
+                            items:
+                              type: string
+                          start_at:
+                            type: array
+                            example:
+                              - 'The start at field must be a date after or equal to today.'
+                            items:
+                              type: string
+                          end_at:
+                            type: array
+                            example:
+                              - 'The end at field must be a date after start at.'
+                            items:
+                              type: string
+                          status:
+                            type: array
+                            example:
+                              - 'The selected status is invalid.'
+                            items:
+                              type: string
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+                  example: optio
+                description:
+                  type: string
+                  description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+                  example: 'Doloribus rerum consequatur sit quis qui possimus esse.'
+                start_at:
+                  type: string
+                  description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+                  example: cumque
+                end_at:
+                  type: string
+                  description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+                  example: ad
+                status:
+                  type: string
+                  description: 'The status of the project.'
+                  example: "'in-progress'"
+                  enum:
+                    - "'available-soon'"
+                    - "'in-progress'"
+                    - "'done'"
+              required:
+                - title
+                - description
+                - start_at
+                - end_at
+                - status
+  '/api/v1/projects/{id}':
+    get:
+      summary: 'View Project.'
+      operationId: viewProject
+      description: 'View a project with its tasks and comments.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"id\": 1,\n  \"title\": \"Project Title\",\n  \"description\": \"Project Description\",\n  \"start_at\": \"2024-12-31\",\n  \"end_at\": \"2025-01-10\",\n  \"status\": \"available-soon\",\n  \"user_id\": 1,\n  \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n  \"comments\": [\n    {\n      \"id\": 1,\n      \"project_id\": 1,\n      \"user_id\": 1\n      \"content\": \"Comment content\",\n      \"created_at\": \"2024-08-24T00:00:00.000000Z\",\n      \"updated_at\": \"2024-08-24T00:00:00.000000Z\",\n    }\n  ],\n  \"tasks\": [\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\"\n    }\n  ]\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - Projects
+    put:
+      summary: 'Update Project.'
+      operationId: updateProject
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: 'Project Title'
+                  description: 'Project Description'
+                  start_at: '2024-12-31'
+                  end_at: '2025-01-10'
+                  status: available-soon
+                  user_id: 1
+                  updated_at: '2024-08-24T00:00:00.000000Z'
+                  created_at: '2024-08-24T00:00:00.000000Z'
+                  id: 1
+                properties:
+                  title:
+                    type: string
+                    example: 'Project Title'
+                  description:
+                    type: string
+                    example: 'Project Description'
+                  start_at:
+                    type: string
+                    example: '2024-12-31'
+                  end_at:
+                    type: string
+                    example: '2025-01-10'
+                  status:
+                    type: string
+                    example: available-soon
+                  user_id:
+                    type: integer
+                    example: 1
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  id:
+                    type: integer
+                    example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This project does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not belong to you'
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The title field must be at least 10 characters. (and 4 more errors)'
+                  errors:
+                    title:
+                      - 'The title field must be at least 10 characters.'
+                    description:
+                      - 'The description field must be at least 25 characters.'
+                    start_at:
+                      - 'The start at field must be a date after or equal to today.'
+                    end_at:
+                      - 'The end at field must be a date after start at.'
+                    status:
+                      - 'The selected status is invalid.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The title field must be at least 10 characters. (and 4 more errors)'
+                  errors:
+                    type: object
+                    properties:
+                      title:
+                        type: array
+                        example:
+                          - 'The title field must be at least 10 characters.'
+                        items:
+                          type: string
+                      description:
+                        type: array
+                        example:
+                          - 'The description field must be at least 25 characters.'
+                        items:
+                          type: string
+                      start_at:
+                        type: array
+                        example:
+                          - 'The start at field must be a date after or equal to today.'
+                        items:
+                          type: string
+                      end_at:
+                        type: array
+                        example:
+                          - 'The end at field must be a date after start at.'
+                        items:
+                          type: string
+                      status:
+                        type: array
+                        example:
+                          - 'The selected status is invalid.'
+                        items:
+                          type: string
+      tags:
+        - Projects
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+                  example: sequi
+                description:
+                  type: string
+                  description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+                  example: 'Voluptatibus repellat sequi eum neque rerum possimus odit.'
+                start_at:
+                  type: string
+                  description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+                  example: facilis
+                end_at:
+                  type: string
+                  description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+                  example: labore
+                status:
+                  type: string
+                  description: 'The status of the project.'
+                  example: "'available-soon'"
+                  enum:
+                    - "'available-soon'"
+                    - "'in-progress'"
+                    - "'done'"
+    delete:
+      summary: 'Delete Project.'
+      operationId: deleteProject
+      description: ''
+      parameters: []
+      responses:
+        204:
+          description: 'No content'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This project does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not belong to you'
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - Projects
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the project.'
+        example: itaque
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: project
+        description: 'The ID of the project.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/projects/{project_id}/tasks/{task_id}/comments':
+    get:
+      summary: 'Shows all comments for a task'
+      operationId: showsAllCommentsForATask
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  {\n    \"id\": 1,\n    \"user_id\": 1,\n    \"task_id\": 1,\n    \"content\": \"Comment content\",\n    \"created_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"updated_at\": \"2024-08-24T14:34:56.000000Z\",\n    \"user\": {\n        \"id\": 78,\n        \"name\": \"User test\",\n        \"email\": \"testuser@email.com\",\n        \"created_at\": \"2024-08-24T13:50:23.000000Z\",\n        \"updated_at\": \"2024-08-24T13:50:23.000000Z\"\n    }\n  }\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not exist'
+      tags:
+        - 'Task Comments'
+    post:
+      summary: 'Create a comment for a task'
+      operationId: createACommentForATask
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  content: 'Comment content'
+                  task_id: 42
+                  user_id: 78
+                  updated_at: '2024-08-24T14:34:56.000000Z'
+                  created_at: '2024-08-24T14:34:56.000000Z'
+                  id: 5
+                properties:
+                  content:
+                    type: string
+                    example: 'Comment content'
+                  task_id:
+                    type: integer
+                    example: 42
+                  user_id:
+                    type: integer
+                    example: 78
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  id:
+                    type: integer
+                    example: 5
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not exist'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Missing content field'
+                    type: object
+                    example:
+                      message: 'The content field is required.'
+                      errors:
+                        content:
+                          - 'The content field is required.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field is required.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field is required.'
+                            items:
+                              type: string
+                  -
+                    description: 'Content field with fewer characters than the minimum'
+                    type: object
+                    example:
+                      message: 'The content field must be at least 5 characters.'
+                      errors:
+                        content:
+                          - 'The content field must be at least 5 characters.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field must be at least 5 characters.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field must be at least 5 characters.'
+                            items:
+                              type: string
+                  -
+                    description: 'Content field with more characters than the maximum'
+                    type: object
+                    example:
+                      message: 'The content field must not be greater than 1500 characters.'
+                      errors:
+                        content:
+                          - 'The content field must not be greater than 1500 characters.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The content field must not be greater than 1500 characters.'
+                      errors:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            example:
+                              - 'The content field must not be greater than 1500 characters.'
+                            items:
+                              type: string
+      tags:
+        - 'Task Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'The content of the comment, must be a minimum of 5 characters and a maximum of 1,500 characters.'
+                  example: nemo
+              required:
+                - content
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: numquam
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: task_id
+        description: 'The ID of the task.'
+        example: blanditiis
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: project
+        description: 'The ID of the project.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: task
+        description: 'The ID of the task.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/projects/{project_id}/tasks/{task_id}/comments/{id}':
+    get:
+      summary: 'Show a specific comment in the task'
+      operationId: showASpecificCommentInTheTask
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 5
+                  user_id: 78
+                  task_id: 42
+                  content: 'Comment content'
+                  created_at: '2024-08-24T14:34:56.000000Z'
+                  updated_at: '2024-08-24T14:34:56.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 5
+                  user_id:
+                    type: integer
+                    example: 78
+                  task_id:
+                    type: integer
+                    example: 42
+                  content:
+                    type: string
+                    example: 'Comment content'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T14:34:56.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not exist'
+                  -
+                    description: 'Comment not found'
+                    type: object
+                    example:
+                      message: 'This comment does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This comment does not exist'
+      tags:
+        - 'Task Comments'
+    delete:
+      summary: 'Delete a comment'
+      operationId: deleteAComment
+      description: ''
+      parameters: []
+      responses:
+        204:
+          description: 'No content'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This comment does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This comment does not belong to you'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not exist'
+                  -
+                    description: 'Comment not found'
+                    type: object
+                    example:
+                      message: 'This comment does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This comment does not exist'
+      tags:
+        - 'Task Comments'
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: sapiente
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: task_id
+        description: 'The ID of the task.'
+        example: consequuntur
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the comment.'
+        example: unde
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: project
+        description: 'The ID of the project.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: task
+        description: 'The ID of the task.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: comment
+        description: 'The ID of the comment.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/v1/projects/{project_id}/tasks':
+    get:
+      summary: 'List Tasks.'
+      operationId: listTasks
+      description: 'Retrieves a list of all tasks associated with the project.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"comments\": [\n              {\n                \"id\": 6,\n                \"user_id\": 78,\n                \"task_id\": 14,\n                \"content\": \"comment content\",\n                \"created_at\": \"2024-08-24T15:58:57.000000Z\",\n                \"updated_at\": \"2024-08-24T15:58:57.000000Z\"\n              }\n          ]\n    }\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+      tags:
+        - Tasks
+    post:
+      summary: 'Create Task.'
+      operationId: createTask
+      description: "Creates a new task based on the provided information, adding it to the user's task set."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: 'Task Title'
+                  description: 'Task Description'
+                  start_at: '2024-12-31'
+                  end_at: '2025-01-10'
+                  status: available-soon
+                  priority: low
+                  assigned_email: ' testuser@email.com'
+                  project_id: 1
+                  user_id: 1
+                  updated_at: '2024-08-24T00:00:00.000000Z'
+                  created_at: '2024-08-24T00:00:00.000000Z'
+                  id: 1
+                properties:
+                  title:
+                    type: string
+                    example: 'Task Title'
+                  description:
+                    type: string
+                    example: 'Task Description'
+                  start_at:
+                    type: string
+                    example: '2024-12-31'
+                  end_at:
+                    type: string
+                    example: '2025-01-10'
+                  status:
+                    type: string
+                    example: available-soon
+                  priority:
+                    type: string
+                    example: low
+                  assigned_email:
+                    type: string
+                    example: ' testuser@email.com'
+                  project_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  id:
+                    type: integer
+                    example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This project does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not belong to you'
+        404:
+          description: 'Project not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'This project does not exist'
+                properties:
+                  message:
+                    type: string
+                    example: 'This project does not exist'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The title field is required. (and 4 more errors)'
+                      errors:
+                        title:
+                          - 'The title field is required.'
+                        description:
+                          - 'The description field is required.'
+                        start_at:
+                          - 'The start_at field is required.'
+                        end_at:
+                          - 'The end_at field is required.'
+                        status:
+                          - 'The status field is required.'
+                        priority:
+                          - 'The priority field is required.'
+                        assigned_email:
+                          - 'The assigned_email field is required.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The title field is required. (and 4 more errors)'
+                      errors:
+                        type: object
+                        properties:
+                          title:
+                            type: array
+                            example:
+                              - 'The title field is required.'
+                            items:
+                              type: string
+                          description:
+                            type: array
+                            example:
+                              - 'The description field is required.'
+                            items:
+                              type: string
+                          start_at:
+                            type: array
+                            example:
+                              - 'The start_at field is required.'
+                            items:
+                              type: string
+                          end_at:
+                            type: array
+                            example:
+                              - 'The end_at field is required.'
+                            items:
+                              type: string
+                          status:
+                            type: array
+                            example:
+                              - 'The status field is required.'
+                            items:
+                              type: string
+                          priority:
+                            type: array
+                            example:
+                              - 'The priority field is required.'
+                            items:
+                              type: string
+                          assigned_email:
+                            type: array
+                            example:
+                              - 'The assigned_email field is required.'
+                            items:
+                              type: string
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The title field must be at least 10 characters. (and 4 more errors)'
+                      errors:
+                        title:
+                          - 'The title field must be at least 10 characters.'
+                        description:
+                          - 'The description field must be at least 25 characters.'
+                        start_at:
+                          - 'The start at field must be a date after or equal to today.'
+                        end_at:
+                          - 'The end at field must be a date after start at.'
+                        status:
+                          - 'The selected status is invalid.'
+                        priority:
+                          - 'The selected priority is invalid.'
+                        assigned_email:
+                          - 'The selected assigned_email is invalid.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The title field must be at least 10 characters. (and 4 more errors)'
+                      errors:
+                        type: object
+                        properties:
+                          title:
+                            type: array
+                            example:
+                              - 'The title field must be at least 10 characters.'
+                            items:
+                              type: string
+                          description:
+                            type: array
+                            example:
+                              - 'The description field must be at least 25 characters.'
+                            items:
+                              type: string
+                          start_at:
+                            type: array
+                            example:
+                              - 'The start at field must be a date after or equal to today.'
+                            items:
+                              type: string
+                          end_at:
+                            type: array
+                            example:
+                              - 'The end at field must be a date after start at.'
+                            items:
+                              type: string
+                          status:
+                            type: array
+                            example:
+                              - 'The selected status is invalid.'
+                            items:
+                              type: string
+                          priority:
+                            type: array
+                            example:
+                              - 'The selected priority is invalid.'
+                            items:
+                              type: string
+                          assigned_email:
+                            type: array
+                            example:
+                              - 'The selected assigned_email is invalid.'
+                            items:
+                              type: string
+      tags:
+        - Tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+                  example: consequatur
+                description:
+                  type: string
+                  description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+                  example: 'Ex consectetur quo odit explicabo.'
+                start_at:
+                  type: string
+                  description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+                  example: aut
+                end_at:
+                  type: string
+                  description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+                  example: dolorem
+                status:
+                  type: string
+                  description: 'The status of the project.'
+                  example: "'in-progress'"
+                  enum:
+                    - "'available-soon'"
+                    - "'in-progress'"
+                    - "'done'"
+                priority:
+                  type: string
+                  description: 'The priority of the project.'
+                  example: "'low'"
+                  enum:
+                    - "'low'"
+                    - "'medium'"
+                    - "'high'"
+                assigned_email:
+                  type: string
+                  description: 'The assigned_email of the project and there must be a user with that email'
+                  example: heaney.raphael@example.net
+              required:
+                - title
+                - description
+                - start_at
+                - end_at
+                - status
+                - priority
+                - assigned_email
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: repellat
+        required: true
+        schema:
+          type: string
+  '/api/v1/projects/{project_id}/tasks/{id}':
+    get:
+      summary: 'View Task.'
+      operationId: viewTask
+      description: 'Retrieves details of a specific task, allowing for a complete view of the selected task’s information.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  user_id: 1
+                  project_id: 1
+                  title: 'Project Title'
+                  description: 'Project Description'
+                  start_at: '2024-12-20'
+                  end_at: '2025-01-20'
+                  priority: low
+                  status: available-soon
+                  assigned_email: testusedsar@email.com
+                  created_at: '2024-08-24T13:51:22.000000Z'
+                  updated_at: '2024-08-24T13:51:22.000000Z'
+                  comments:
+                    -
+                      id: 6
+                      user_id: 78
+                      task_id: 14
+                      content: 'comment content'
+                      created_at: '2024-08-24T15:58:57.000000Z'
+                      updated_at: '2024-08-24T15:58:57.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  project_id:
+                    type: integer
+                    example: 1
+                  title:
+                    type: string
+                    example: 'Project Title'
+                  description:
+                    type: string
+                    example: 'Project Description'
+                  start_at:
+                    type: string
+                    example: '2024-12-20'
+                  end_at:
+                    type: string
+                    example: '2025-01-20'
+                  priority:
+                    type: string
+                    example: low
+                  status:
+                    type: string
+                    example: available-soon
+                  assigned_email:
+                    type: string
+                    example: testusedsar@email.com
+                  created_at:
+                    type: string
+                    example: '2024-08-24T13:51:22.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T13:51:22.000000Z'
+                  comments:
+                    type: array
+                    example:
+                      -
+                        id: 6
+                        user_id: 78
+                        task_id: 14
+                        content: 'comment content'
+                        created_at: '2024-08-24T15:58:57.000000Z'
+                        updated_at: '2024-08-24T15:58:57.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 6
+                        user_id:
+                          type: integer
+                          example: 78
+                        task_id:
+                          type: integer
+                          example: 14
+                        content:
+                          type: string
+                          example: 'comment content'
+                        created_at:
+                          type: string
+                          example: '2024-08-24T15:58:57.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2024-08-24T15:58:57.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This Task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This Task does not exist'
+      tags:
+        - Tasks
+    put:
+      summary: 'Update Task.'
+      operationId: updateTask
+      description: 'Updates the information of an existing task based on the provided modifications.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  title: 'Task Title'
+                  description: 'Task Description'
+                  start_at: '2024-12-31'
+                  end_at: '2025-01-10'
+                  status: available-soon
+                  priority: low
+                  assigned_email: ' testuser@email.com'
+                  project_id: 1
+                  user_id: 1
+                  updated_at: '2024-08-24T00:00:00.000000Z'
+                  created_at: '2024-08-24T00:00:00.000000Z'
+                  id: 1
+                properties:
+                  title:
+                    type: string
+                    example: 'Task Title'
+                  description:
+                    type: string
+                    example: 'Task Description'
+                  start_at:
+                    type: string
+                    example: '2024-12-31'
+                  end_at:
+                    type: string
+                    example: '2025-01-10'
+                  status:
+                    type: string
+                    example: available-soon
+                  priority:
+                    type: string
+                    example: low
+                  assigned_email:
+                    type: string
+                    example: ' testuser@email.com'
+                  project_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  updated_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2024-08-24T00:00:00.000000Z'
+                  id:
+                    type: integer
+                    example: 1
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This project does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not belong to you'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This Task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This Task does not exist'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The title field must be at least 10 characters. (and 4 more errors)'
+                  errors:
+                    title:
+                      - 'The title field must be at least 10 characters.'
+                    description:
+                      - 'The description field must be at least 25 characters.'
+                    start_at:
+                      - 'The start at field must be a date after or equal to today.'
+                    end_at:
+                      - 'The end at field must be a date after start at.'
+                    status:
+                      - 'The selected status is invalid.'
+                    priority:
+                      - 'The selected priority is invalid.'
+                    assigned_email:
+                      - 'The selected assigned_email is invalid.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The title field must be at least 10 characters. (and 4 more errors)'
+                  errors:
+                    type: object
+                    properties:
+                      title:
+                        type: array
+                        example:
+                          - 'The title field must be at least 10 characters.'
+                        items:
+                          type: string
+                      description:
+                        type: array
+                        example:
+                          - 'The description field must be at least 25 characters.'
+                        items:
+                          type: string
+                      start_at:
+                        type: array
+                        example:
+                          - 'The start at field must be a date after or equal to today.'
+                        items:
+                          type: string
+                      end_at:
+                        type: array
+                        example:
+                          - 'The end at field must be a date after start at.'
+                        items:
+                          type: string
+                      status:
+                        type: array
+                        example:
+                          - 'The selected status is invalid.'
+                        items:
+                          type: string
+                      priority:
+                        type: array
+                        example:
+                          - 'The selected priority is invalid.'
+                        items:
+                          type: string
+                      assigned_email:
+                        type: array
+                        example:
+                          - 'The selected assigned_email is invalid.'
+                        items:
+                          type: string
+      tags:
+        - Tasks
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+                  example: veritatis
+                description:
+                  type: string
+                  description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+                  example: 'Unde quaerat minus consectetur sequi.'
+                start_at:
+                  type: string
+                  description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+                  example: perferendis
+                end_at:
+                  type: string
+                  description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+                  example: qui
+                status:
+                  type: string
+                  description: 'The status of the project.'
+                  example: "'available-soon'"
+                  enum:
+                    - "'available-soon'"
+                    - "'in-progress'"
+                    - "'done'"
+                priority:
+                  type: string
+                  description: 'The priority of the project.'
+                  example: "'low'"
+                  enum:
+                    - "'low'"
+                    - "'medium'"
+                    - "'high'"
+                assigned_email:
+                  type: string
+                  description: 'The assigned_email of the project and there must be a user with that email'
+                  example: rosamond.gerhold@example.com
+    delete:
+      summary: 'Delete Task.'
+      operationId: deleteTask
+      description: "Removes a specific task from the user's task set, permanently deleting it."
+      parameters: []
+      responses:
+        204:
+          description: 'No content'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: Unauthenticated.
+                    properties:
+                      message:
+                        type: string
+                        example: Unauthenticated.
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This project does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not belong to you'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'This task does not belong to you'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not belong to you'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Project not found'
+                    type: object
+                    example:
+                      message: 'This project does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This project does not exist'
+                  -
+                    description: 'Task not found'
+                    type: object
+                    example:
+                      message: 'This task does not exist'
+                    properties:
+                      message:
+                        type: string
+                        example: 'This task does not exist'
+      tags:
+        - Tasks
+    parameters:
+      -
+        in: path
+        name: project_id
+        description: 'The ID of the project.'
+        example: natus
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: id
+        description: 'The ID of the task.'
+        example: assumenda
+        required: true
+        schema:
+          type: string
+  /api/v1/assigned-tasks:
+    get:
+      summary: 'Assigned Tasks.'
+      operationId: assignedTasks
+      description: 'Retrieves a list of tasks assigned to the user, allowing them to view tasks under their responsibility.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n    {\n      \"id\": 1,\n      \"user_id\": 1,\n      \"project_id\": 1,\n      \"title\": \"Project Title\",\n      \"description\": \"Project Description\",\n      \"start_at\": \"2024-12-20\",\n      \"end_at\": \"2025-01-20\",\n      \"priority\": \"low\",\n      \"status\": \"available-soon\",\n      \"assigned_email\": \"testusedsar@email.com\",\n      \"created_at\": \"2024-08-24T13:51:22.000000Z\",\n      \"updated_at\": \"2024-08-24T13:51:22.000000Z\",\n    }\n}"
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Tasks
+  /api/auth/register:
+    post:
+      summary: 'Create a user.'
+      operationId: createAUser
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User registered successfully'
+                  user:
+                    name: 'John Doe'
+                    email: john.doe@example.com
+                    updated_at: '2024-08-24T13:50:23.000000Z'
+                    created_at: '2024-08-24T13:50:23.000000Z'
+                    id: 78
+                properties:
+                  message:
+                    type: string
+                    example: 'User registered successfully'
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      updated_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+                      created_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+                      id:
+                        type: integer
+                        example: 78
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The name field must be a string. (and 5 more errors)'
+                  errors:
+                    name:
+                      - 'The name field must be a string.'
+                    email:
+                      - 'The email has already been taken.'
+                    password:
+                      - 'The password field must be at least 8 characters.'
+                      - 'The password field must contain at least one uppercase and one lowercase letter.'
+                      - 'The password field must contain at least one symbol.'
+                      - 'The password field must contain at least one number.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The name field must be a string. (and 5 more errors)'
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        example:
+                          - 'The name field must be a string.'
+                        items:
+                          type: string
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+                      password:
+                        type: array
+                        example:
+                          - 'The password field must be at least 8 characters.'
+                          - 'The password field must contain at least one uppercase and one lowercase letter.'
+                          - 'The password field must contain at least one symbol.'
+                          - 'The password field must contain at least one number.'
+                        items:
+                          type: string
+      tags:
+        - 'User management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'The name of the user.'
+                  example: 'John Doe'
+                email:
+                  type: string
+                  description: 'The email of the user and this email must to be unique.'
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  description: "The user's password. Must be at least 8 characters long, including letters, numbers, symbols, and at least one uppercase and one lowercase letter."
+                  example: '@123User'
+              required:
+                - name
+                - email
+                - password
+      security: []
+  /api/auth/login:
+    post:
+      summary: 'Login the user.'
+      operationId: loginTheUser
+      description: 'It is at this endpoint that you will obtain the Bearer token to access other routes that require authentication.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Login successful'
+                  token:
+                    access_token: token_value
+                    token_type: Bearer
+                  user:
+                    id: 78
+                    name: 'John Doe'
+                    email: john.doe@example.com
+                    created_at: '2024-08-24T13:50:23.000000Z'
+                    updated_at: '2024-08-24T13:50:23.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Login successful'
+                  token:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: token_value
+                      token_type:
+                        type: string
+                        example: Bearer
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 78
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      created_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2024-08-24T13:50:23.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Invalid credentials'
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid credentials'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The selected email is invalid.'
+                  errors:
+                    email:
+                      - 'The selected email is invalid.'
+                    password:
+                      - 'The password field must be at least 8 characters.'
+                      - 'The password field must contain at least one uppercase and one lowercase letter.'
+                      - 'The password field must contain at least one symbol.'
+                      - 'The password field must contain at least one number.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The selected email is invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The selected email is invalid.'
+                        items:
+                          type: string
+                      password:
+                        type: array
+                        example:
+                          - 'The password field must be at least 8 characters.'
+                          - 'The password field must contain at least one uppercase and one lowercase letter.'
+                          - 'The password field must contain at least one symbol.'
+                          - 'The password field must contain at least one number.'
+                        items:
+                          type: string
+      tags:
+        - 'User management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The email of the user.'
+                  example: john.doe@example.com
+                password:
+                  type: string
+                  description: "The user's password. Must be at least 8 characters long, including letters, numbers, symbols, and at least one uppercase and one lowercase letter."
+                  example: '"@123User"'
+              required:
+                - email
+                - password
+      security: []
+  /api/auth/logout:
+    delete:
+      summary: 'Log out the user.'
+      operationId: logOutTheUser
+      description: 'On this endpoint you log out the user and remove their Bearer token.'
+      parameters: []
+      responses:
+        204:
+          description: 'No content'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - 'User management'
+  /api/auth/password/email:
+    post:
+      summary: "Change a user's password."
+      operationId: changeAUsersPassword
+      description: "This endpoint generates and sends the email to reset the user's password."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Please check your mail to reset your password'
+                properties:
+                  message:
+                    type: string
+                    example: 'Please check your mail to reset your password'
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Error message'
+                properties:
+                  message:
+                    type: string
+                    example: 'Error message'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'User not found'
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+      tags:
+        - 'User management'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'The email of the user requesting password reset.'
+                  example: john.doe@example.com
+              required:
+                - email
+      security: []
+tags:
+  -
+    name: 'Account Management'
+    description: "The Account Management encompasses endpoints dedicated to managing user profiles and profile pictures.\nIt includes operations for viewing and updating profile information as well as managing the associated profile picture."
+  -
+    name: 'Project Comments'
+    description: "\nAPIs for managing comments on projects."
+  -
+    name: Projects
+    description: "\nAPIs for managing projects."
+  -
+    name: 'Task Comments'
+    description: "\nAPIs for managing comments on tasks within projects."
+  -
+    name: Tasks
+    description: "\nThe Tasks group includes endpoints designed for task management.\nIt provides comprehensive functionality for handling tasks, covering all aspects from creation and viewing to updating and removal.\nThis group offers a thorough approach to managing and maintaining tasks associated with the user."
+  -
+    name: 'User management'
+    description: "\nThis API provides comprehensive authentication management capabilities, including user registration, login, and logout operations.\nIts endpoints allow for secure user authentication, issuance of access tokens, ensuring data protection and adherence to security best practices."
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can recover your token by creating an account and logging into it.'
+security:
+  -
+    default: []

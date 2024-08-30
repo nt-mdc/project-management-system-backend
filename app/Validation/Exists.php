@@ -30,4 +30,12 @@ trait Exists{
         return $comment;
     }
 
+    protected function photoExist($photo){
+        if(!$photo){
+            throw new \App\Exceptions\ProfilePhotoNotFoundException();
+        }
+
+        return $photo;
+    }
+
 }

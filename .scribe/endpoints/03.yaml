@@ -1,0 +1,457 @@
+name: 'Project Comments'
+description: |-
+
+  APIs for managing comments on projects.
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/projects/{project_id}/comments'
+    metadata:
+      groupName: 'Project Comments'
+      groupDescription: |-
+
+        APIs for managing comments on projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Shows all comments for a project'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      project_id:
+        name: project_id
+        description: 'The ID of the project.'
+        required: true
+        example: id
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      project_id: id
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            {
+              "id": 5,
+              "user_id": 78,
+              "project_id": 42,
+              "content": "Comment content",
+              "created_at": "2024-08-24T14:34:56.000000Z",
+              "updated_at": "2024-08-24T14:34:56.000000Z",
+              "user": {
+                  "id": 78,
+                  "name": "User test",
+                  "email": "testuser@email.com",
+                  "created_at": "2024-08-24T13:50:23.000000Z",
+                  "updated_at": "2024-08-24T13:50:23.000000Z"
+              }
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer cEfedh56kV168gP3av4ZbDa'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: 'api/v1/projects/{project_id}/comments'
+    metadata:
+      groupName: 'Project Comments'
+      groupDescription: |-
+
+        APIs for managing comments on projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create a comment for a project'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      project_id:
+        name: project_id
+        description: 'The ID of the project.'
+        required: true
+        example: dolorum
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      project_id: dolorum
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      content:
+        name: content
+        description: 'The content of the comment, must be a minimum of 5 characters and a maximum of 1,500 characters.'
+        required: true
+        example: nihil
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      content: nihil
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+                "content": "Comment content",
+                "project_id": 42,
+                "user_id": 78,
+                "updated_at": "2024-08-24T14:34:56.000000Z",
+                "created_at": "2024-08-24T14:34:56.000000Z",
+                "id": 5
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The content field is required.",
+            "errors": {
+                "content": [
+                    "The content field is required."
+                ]
+            }
+          }
+        headers: []
+        description: 'Missing content field'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The content field must be at least 5 characters.",
+            "errors": {
+                "content": [
+                    "The content field must be at least 5 characters."
+                ]
+            }
+          }
+        headers: []
+        description: 'Content field with fewer characters than the minimum'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The content field must not be greater than 1500 characters.",
+            "errors": {
+                "content": [
+                    "The content field must not be greater than 1500 characters."
+                ]
+            }
+          }
+        headers: []
+        description: 'Content field with more characters than the maximum'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6ZhbVkDcE43a68de1Pv5agf'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/projects/{project_id}/comments/{id}'
+    metadata:
+      groupName: 'Project Comments'
+      groupDescription: |-
+
+        APIs for managing comments on projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show a specific comment in the project'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      project_id:
+        name: project_id
+        description: 'The ID of the project.'
+        required: true
+        example: possimus
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      id:
+        name: id
+        description: 'The ID of the comment.'
+        required: true
+        example: non
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      project:
+        name: project
+        description: 'The ID of the project.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      comment:
+        name: comment
+        description: 'The ID of the comment.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      project_id: possimus
+      id: non
+      project: 1
+      comment: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "id": 5,
+            "user_id": 78,
+            "project_id": 42,
+            "content": "Comment content",
+            "created_at": "2024-08-24T14:34:56.000000Z",
+            "updated_at": "2024-08-24T14:34:56.000000Z"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This comment does not exist"
+          }}
+        headers: []
+        description: 'Comment not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 1ag8ZEk53fcVDb46vPda6eh'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/projects/{project_id}/comments/{id}'
+    metadata:
+      groupName: 'Project Comments'
+      groupDescription: |-
+
+        APIs for managing comments on projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete a comment'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      project_id:
+        name: project_id
+        description: 'The ID of the project.'
+        required: true
+        example: veniam
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      id:
+        name: id
+        description: 'The ID of the comment.'
+        required: true
+        example: voluptatem
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      project:
+        name: project
+        description: 'The ID of the project.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+      comment:
+        name: comment
+        description: 'The ID of the comment.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      project_id: veniam
+      id: voluptatem
+      project: 1
+      comment: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 204
+        content: ''
+        headers: []
+        description: 'No content'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "This comment does not belong to you"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This comment does not exist"
+          }
+        headers: []
+        description: 'Comment not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer a436cf815baZDEdkgeV6hvP'
+    controller: null
+    method: null
+    route: null
+    custom: []
