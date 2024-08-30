@@ -1,0 +1,592 @@
+name: Projects
+description: |-
+
+  APIs for managing projects.
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/v1/projects
+    metadata:
+      groupName: Projects
+      groupDescription: |-
+
+        APIs for managing projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List Projects.'
+      description: 'Lists projects that the user has created or projects to which they have a task assigned.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            {
+              "id": 1,
+              "title": "Project Title",
+              "description": "Project Description",
+              "start_at": "2024-08-24T00:00:00.000000Z",
+              "end_at": "2024-08-25T00:00:00.000000Z",
+              "status": "available-soon",
+              "user_id": 1,
+              "updated_at": "2024-08-24T00:00:00.000000Z",
+              "created_at": "2024-08-24T00:00:00.000000Z",
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6fga4531ZbPke86avdVDchE'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/v1/projects
+    metadata:
+      groupName: Projects
+      groupDescription: |-
+
+        APIs for managing projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Create Project.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        name: title
+        description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+        required: true
+        example: optio
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      description:
+        name: description
+        description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+        required: true
+        example: 'Doloribus rerum consequatur sit quis qui possimus esse.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      start_at:
+        name: start_at
+        description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+        required: true
+        example: cumque
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      end_at:
+        name: end_at
+        description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+        required: true
+        example: ad
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      status:
+        name: status
+        description: 'The status of the project.'
+        required: true
+        example: "'in-progress'"
+        type: string
+        enumValues:
+          - "'available-soon'"
+          - "'in-progress'"
+          - "'done'"
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      title: optio
+      description: 'Doloribus rerum consequatur sit quis qui possimus esse.'
+      start_at: cumque
+      end_at: ad
+      status: "'in-progress'"
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "title": "Project Title",
+            "description": "Project Description",
+            "start_at": "2024-12-31",
+            "end_at": "2025-01-10",
+            "status": "available-soon",
+            "user_id": 1,
+            "updated_at": "2024-08-24T00:00:00.000000Z",
+            "created_at": "2024-08-24T00:00:00.000000Z",
+            "id": 1
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The title field is required. (and 4 more errors)",
+            "errors": {
+              "title": ["The title field is required."],
+              "description": ["The description field is required."],
+              "start_at": ["The start_at field is required."],
+              "end_at": ["The end_at field is required."],
+              "status": ["The status field is required."]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The title field must be at least 10 characters. (and 4 more errors)",
+            "errors": {
+              "title": ["The title field must be at least 10 characters."],
+              "description": ["The description field must be at least 25 characters."],
+              "start_at": ["The start at field must be a date after or equal to today."],
+              "end_at": ["The end at field must be a date after start at."],
+              "status": ["The selected status is invalid."]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer cZfDvke81Egd65P6aV34hab'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/v1/projects/{id}'
+    metadata:
+      groupName: Projects
+      groupDescription: |-
+
+        APIs for managing projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'View Project.'
+      description: 'View a project with its tasks and comments.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the project.'
+        required: true
+        example: itaque
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      project:
+        name: project
+        description: 'The ID of the project.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      id: itaque
+      project: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Project Title",
+            "description": "Project Description",
+            "start_at": "2024-12-31",
+            "end_at": "2025-01-10",
+            "status": "available-soon",
+            "user_id": 1,
+            "created_at": "2024-08-24T00:00:00.000000Z",
+            "updated_at": "2024-08-24T00:00:00.000000Z",
+            "comments": [
+              {
+                "id": 1,
+                "project_id": 1,
+                "user_id": 1
+                "content": "Comment content",
+                "created_at": "2024-08-24T00:00:00.000000Z",
+                "updated_at": "2024-08-24T00:00:00.000000Z",
+              }
+            ],
+            "tasks": [
+              {
+                "id": 1,
+                "user_id": 1,
+                "project_id": 1,
+                "title": "Project Title",
+                "description": "Project Description",
+                "start_at": "2024-12-20",
+                "end_at": "2025-01-20",
+                "priority": "low",
+                "status": "available-soon",
+                "assigned_email": "testusedsar@email.com",
+                "created_at": "2024-08-24T13:51:22.000000Z",
+                "updated_at": "2024-08-24T13:51:22.000000Z"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6Vc8b4Dav6k1Zef35EdgPah'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/projects/{id}'
+    metadata:
+      groupName: Projects
+      groupDescription: |-
+
+        APIs for managing projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Update Project.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the project.'
+        required: true
+        example: autem
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      project:
+        name: project
+        description: 'The ID of the project.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      id: autem
+      project: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        name: title
+        description: 'The title of the project, must be at least 10 characters and a maximum of 150 characters.'
+        required: false
+        example: sequi
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      description:
+        name: description
+        description: 'The description of the project, must be a minimum of 25 characters and a maximum of 1,500 characters.'
+        required: false
+        example: 'Voluptatibus repellat sequi eum neque rerum possimus odit.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      start_at:
+        name: start_at
+        description: 'The start date of the project in Y-m-d (2024-12-31) and must be a date after or equal to today.'
+        required: false
+        example: facilis
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      end_at:
+        name: end_at
+        description: 'The end date of the project in Y-m-d (2025-01-10) and must be a date after start at.'
+        required: false
+        example: labore
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      status:
+        name: status
+        description: 'The status of the project.'
+        required: false
+        example: "'available-soon'"
+        type: string
+        enumValues:
+          - "'available-soon'"
+          - "'in-progress'"
+          - "'done'"
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      title: sequi
+      description: 'Voluptatibus repellat sequi eum neque rerum possimus odit.'
+      start_at: facilis
+      end_at: labore
+      status: "'available-soon'"
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "title": "Project Title",
+            "description": "Project Description",
+            "start_at": "2024-12-31",
+            "end_at": "2025-01-10",
+            "status": "available-soon",
+            "user_id": 1,
+            "updated_at": "2024-08-24T00:00:00.000000Z",
+            "created_at": "2024-08-24T00:00:00.000000Z",
+            "id": 1
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "This project does not belong to you"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "message": "The title field must be at least 10 characters. (and 4 more errors)",
+            "errors": {
+              "title": ["The title field must be at least 10 characters."],
+              "description": ["The description field must be at least 25 characters."],
+              "start_at": ["The start at field must be a date after or equal to today."],
+              "end_at": ["The end at field must be a date after start at."],
+              "status": ["The selected status is invalid."]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer d84vP6DfacbhZkVa6Ee51g3'
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/projects/{id}'
+    metadata:
+      groupName: Projects
+      groupDescription: |-
+
+        APIs for managing projects.
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Delete Project.'
+      description: ''
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the project.'
+        required: true
+        example: voluptatibus
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      project:
+        name: project
+        description: 'The ID of the project.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        custom: []
+    cleanUrlParameters:
+      id: voluptatibus
+      project: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 204
+        content: ''
+        headers: []
+        description: 'No content'
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 401
+        content: |-
+          {
+            "message": "This project does not belong to you"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "This project does not exist"
+          }
+        headers: []
+        description: 'Project not found'
+        custom: []
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer faV8g4c5e6v6PEZkDbha1d3'
+    controller: null
+    method: null
+    route: null
+    custom: []
