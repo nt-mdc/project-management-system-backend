@@ -18,7 +18,6 @@ This is an API built in Laravel for managing projects and tasks, with support fo
 - **Laravel Sanctum**: For token-based authentication.
 - **Scribe**: For automatic generation of API documentation.
 - **MySQL**: Relational database used.
-- **Puppeteer**: Used for web testing and automation.
 
 ## Installation
 
